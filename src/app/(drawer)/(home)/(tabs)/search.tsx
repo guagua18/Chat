@@ -1,15 +1,11 @@
-import { useAuth } from '@clerk/clerk-expo';
-import { View, Text, Button } from 'react-native';
+import { View, Text } from 'react-native';
 
 export default function HomeScreen() {
-  const { signOut } = useAuth()
-
   return (
     <View className="flex-1 items-center justify-center">
       <Text className="text-3xl text-blue-500 font-bold bg-red-300 p-8">
-        Settings
+        Search
       </Text>
-      <Button onPress={() => signOut()} title="Sign Out" />
     </View>
   )
 }

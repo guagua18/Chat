@@ -3,8 +3,8 @@ import { Drawer } from "expo-router/drawer"
 export default function DrawerLayout() {
   return (
     <Drawer>
-      <Drawer.Screen name="(home)" options={{ drawerLabel: "Home" }} />
-      <Drawer.Screen name="about" options={{ drawerLabel: "About" }} />
+      <Drawer.Screen name="(home)" options={{ title: "Home", headerShown: false }} />
+      <Drawer.Screen name="about" options={{ title: "About" }} />
     </Drawer>
   )
 }
