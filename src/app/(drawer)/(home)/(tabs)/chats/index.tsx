@@ -1,11 +1,15 @@
-import { View, Text } from 'react-native';
+import { View, FlatList } from "react-native"
+import channels from "@/data/channels"
+import ChannelListItem from "@/components/ChannelListItem"
 
 export default function HomeScreen() {
   return (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-3xl text-blue-500 font-bold bg-red-300 p-8">
-        Channel List
-      </Text>
-    </View>
+      <FlatList
+      data={channels}
+      className="bg-white"
+      renderItem={({ item }) => <ChannelListItem channel={item} />}
+      showsVerticalScrollIndicator={false}
+      contentInsetAdjustmentBehavior="automatic"
+      />
   )
 }
