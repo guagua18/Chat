@@ -9,6 +9,11 @@ export type Message = {
   id: string
   createdAt: string
   content: string
+  user: {
+    id: string,
+    name: string
+    avatar: string
+  }
   sender?: User
   image?: string
 }
