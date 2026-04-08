@@ -1,4 +1,4 @@
-import { Stack } from "expo-router"
+import { Link, Stack } from "expo-router"
 import { Ionicons } from "@expo/vector-icons"
 export default function ChatsLayout() {
   return (
@@ -19,8 +19,10 @@ export default function ChatsLayout() {
             />
           ),
           headerRight: () => (
-            <Ionicons name="add" size={28} className="px-1" color="gray" />
-          )
+            <Link href="/new/chat" asChild>
+              <Ionicons name="add" size={28} className="px-1" color="gray" />
+            </Link>
+          ),
         })}
       />
     </Stack>

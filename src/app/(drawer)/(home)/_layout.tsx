@@ -16,6 +16,10 @@ export default function HomeLayout() {
           // headerTransparent: true,
         }}
       />
+      <Stack.Screen
+        name="new/chat"
+        options={{ title: "New Chat", presentation: "modal" }}
+      />
     </Stack>
   )
 }
