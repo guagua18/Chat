@@ -3,8 +3,8 @@ import { Stack } from "expo-router"
 import { ClerkProvider } from "@clerk/clerk-expo"
 import { tokenCache } from "@clerk/clerk-expo/token-cache"
 import { useAuth } from "@clerk/clerk-expo"
+import SupabaseProvider from "@/providers/SupabaseProvider"
 import { ActivityIndicator } from "react-native"
-// import SupabaseProvider from "@/providers/SupabaseProvider"
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
@@ -32,12 +32,12 @@ function RootStack() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ClerkProvider tokenCache={tokenCache}>
-        {/* <SupabaseProvider> */}
-          <RootStack />
-        {/* </SupabaseProvider> */}
-      </ClerkProvider>
-    </QueryClientProvider>
+    // <QueryClientProvider client={queryClient}>
+    <ClerkProvider tokenCache={tokenCache}>
+      <SupabaseProvider>
+        <RootStack />
+      </SupabaseProvider>
+    </ClerkProvider>
+    // </QueryClientProvider>
   )
 }
