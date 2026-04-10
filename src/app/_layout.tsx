@@ -32,12 +32,12 @@ function RootStack() {
 
 export default function RootLayout() {
   return (
-    // <QueryClientProvider client={queryClient}>
-    <ClerkProvider tokenCache={tokenCache}>
-      <SupabaseProvider>
-        <RootStack />
-      </SupabaseProvider>
-    </ClerkProvider>
-    // </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <ClerkProvider tokenCache={tokenCache}>
+        <SupabaseProvider>
+          <RootStack />
+        </SupabaseProvider>
+      </ClerkProvider>
+    </QueryClientProvider>
   )
 }

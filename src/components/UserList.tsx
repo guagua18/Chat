@@ -1,10 +1,10 @@
-import users from "@/data/users";
-import { FlatList, Alert } from "react-native";
+import { FlatList, Alert, ActivityIndicator, Text } from "react-native";
 import UserListItem from "./UserListItem";
 import { useSupabase } from "@/providers/SupabaseProvider";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { Tables } from "@/types/database.types"
+import { useQuery } from "@tanstack/react-query"
 
 type User = Tables<'users'>
 
@@ -18,24 +18,26 @@ export default function UserList({ onPress }: UserListProps) {
 
   const { user } = useUser()
 
-  const [users, setUsers] = useState<User[]>([])
+  const { data, error, isLoading } = useQuery({
+    querKey: ['users'],
+    queryFn: async () => {
+      const { data } = await supabase.from('users').select('*').neq('id', user?.id).throwOnError();
+      return data;
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const { data, error } = await supabase.from('users').select('*').neq('id', user?.id);
-      if (error) {
-        Alert.alert('Error', error.message);
-      } else {
-        setUsers(data);
-      }
+    }
+  })
 
-    };
-    fetchUsers();
-  }, [])
+  if (isLoading) {
+    return <ActivityIndicator />
+  }
+
+  if (error) {
+    return <Text>{error.message}</Text>
+  }
 
   return (
     <FlatList
-      data={users}
+      data={data}
       renderItem={({ item }) => <UserListItem user={item} onPress={onPress} />}
     />
   )
