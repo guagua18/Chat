@@ -48,8 +48,8 @@ export default function ChannelScreen() {
   return (
     <>
       <Stack.Screen options={{ title: channelName || 'TODO' }} />
-      <MessageList />
-      <MessageInput />
+      <MessageList channel={channel} />
+      <MessageInput channel={channel} />
     </>
   )
 }
