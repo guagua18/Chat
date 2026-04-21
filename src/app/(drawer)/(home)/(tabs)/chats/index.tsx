@@ -8,6 +8,8 @@ export default function ChannelListScreen() {
   const supabase = useSupabase()
   const { user } = useUser()
 
+  // TDDO： Pagination
+
   const { data: channels, error, isLoading } = useQuery({
     queryKey: ['channels'],
     queryFn: async () => {
