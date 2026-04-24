@@ -16,7 +16,7 @@ import * as ImagePicker from "expo-image-picker"
 import { useSupabase } from "@/providers/SupabaseProvider"
 import { useUser } from "@clerk/clerk-expo"
 import { Channel } from "diagnostics_channel"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export default function MessageInput({ channel }: { channel: Channel }) {
   const [message, setMessage] = useState("")
@@ -24,7 +24,9 @@ export default function MessageInput({ channel }: { channel: Channel }) {
 
   const supabase = useSupabase();
   const { user } = useUser();
+  const queryClient = useQueryClient()
 
+  // TODO: Optimistic updates(乐观更新)
   const newMessage = useMutation({
     mutationFn: async () => {
       const { data } = await supabase.from('messages').insert({
@@ -36,6 +38,7 @@ export default function MessageInput({ channel }: { channel: Channel }) {
       return data;
     },
     onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['messages', channel.id] })
       setMessage("")
       setImage(null)
     },

@@ -6,15 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Channel } from "@/types";
 
 export default function MessageList({ channel }: { channel: Channel }) {
-  const myId = "u-1"
-
   const supabase = useSupabase()
   const { user } = useUser()
-
+  // TODO: PAGINATION
   const { data: messages, error, isLoading } = useQuery({
     queryKey: ['messages', channel.id],
     queryFn: async () => {
-      const { data } = await supabase.from('messages').select('*').eq('channel_id', channel.id).throwOnError();
+      const { data } = await supabase.from('messages').select('*').eq('channel_id', channel.id).order('created_at', { ascending: false }).throwOnError();
 
       return data;
     }
