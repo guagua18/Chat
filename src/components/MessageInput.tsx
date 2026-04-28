@@ -17,6 +17,7 @@ import { useSupabase } from "@/providers/SupabaseProvider"
 import { useUser } from "@clerk/clerk-expo"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useChannel } from "@/providers/ChannelProvider"
+import { uploadImage } from "@/utils/storage"
 
 export default function MessageInput() {
   const { channel, realTimeChannel } = useChannel()
@@ -29,13 +30,14 @@ export default function MessageInput() {
 
   // TODO: Optimistic updates(乐观更新)
   const newMessage = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (image: string | null) => {
       const { data } = await supabase
         .from("messages")
         .insert({
           content: message,
           user_id: user!.id,
           channel_id: channel.id,
+          image,
         })
         .select("*")
         .single()
@@ -52,6 +54,8 @@ export default function MessageInput() {
           payload: newMessage,
         })
       }
+      setMessage("")
+      setImage(null)
     },
     onError(error) {
       Alert.alert("Failed to send message", error.message)
@@ -89,8 +93,12 @@ export default function MessageInput() {
     }
   }
 
-  const handlesSend = () => {
-    newMessage.mutate()
+  const handlesSend = async () => {
+    let supaImage: string | null = null
+    if (image) {
+      supaImage = await uploadImage(supabase, image)
+    }
+    newMessage.mutate(supaImage)
   }
 
   const isMessageEmpty = !message && !image
