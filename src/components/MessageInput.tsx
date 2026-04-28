@@ -19,33 +19,43 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useChannel } from "@/providers/ChannelProvider"
 
 export default function MessageInput() {
-  const { channel } = useChannel();
+  const { channel, realTimeChannel } = useChannel()
   const [message, setMessage] = useState("")
   const [image, setImage] = useState<string | null>(null)
 
-  const supabase = useSupabase();
-  const { user } = useUser();
+  const supabase = useSupabase()
+  const { user } = useUser()
   const queryClient = useQueryClient()
 
   // TODO: Optimistic updates(乐观更新)
   const newMessage = useMutation({
     mutationFn: async () => {
-      const { data } = await supabase.from('messages').insert({
-        content: message,
-        user_id: user!.id,
-        channel_id: channel.id
-      }).select('*').single().throwOnError();
+      const { data } = await supabase
+        .from("messages")
+        .insert({
+          content: message,
+          user_id: user!.id,
+          channel_id: channel.id,
+        })
+        .select("*")
+        .single()
+        .throwOnError()
 
-      return data;
+      return data
     },
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['messages', channel.id] })
-      setMessage("")
-      setImage(null)
+    onSuccess(newMessage) {
+      queryClient.invalidateQueries({ queryKey: ["messages", channel.id] })
+      if (realTimeChannel) {
+        realTimeChannel.send({
+          type: "broadcast",
+          event: "shout",
+          payload: newMessage,
+        })
+      }
     },
     onError(error) {
-      Alert.alert('Failed to send message', error.message)
-    }
+      Alert.alert("Failed to send message", error.message)
+    },
   })
 
   const pickImage = async () => {
@@ -80,7 +90,7 @@ export default function MessageInput() {
   }
 
   const handlesSend = () => {
-    newMessage.mutate();
+    newMessage.mutate()
   }
 
   const isMessageEmpty = !message && !image
